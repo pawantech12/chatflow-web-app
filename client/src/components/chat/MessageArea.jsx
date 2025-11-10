@@ -691,7 +691,7 @@ export function MessageArea({
               ) : (
                 <>
                   <DropdownMenuItem
-                    className="cursor-pointer flex items-center gap-2 hover:bg-slate-50"
+                    className="cursor-pointer flex items-center gap-2 hover:bg-slate-50 sm:hidden"
                     onClick={(e) => {
                       e.stopPropagation();
                       onBack();
@@ -1327,13 +1327,17 @@ export function MessageArea({
           className=""
         >
           {replyingTo && (
-            <div className="flex items-center justify-between bg-slate-100 border-l-4 border-blue-500 rounded-md px-3 py-2 mb-2">
-              <div>
-                <p className="text-sm font-semibold text-blue-700">
-                  Replying to {replyingTo.sender?.name || "User"}
+            <div className="group relative flex items-start justify-between gap-3 mb-3 px-4 py-3 rounded-xl border-l-[5px] border-blue-500/80 bg-gradient-to-r from-white/80 to-blue-50/60 backdrop-blur-md shadow-sm transition-all duration-300">
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-semibold text-slate-800 flex items-center gap-1">
+                  <span className="text-blue-600">↩</span>
+                  Replying to{" "}
+                  <span className="text-blue-700">
+                    {replyingTo.sender?.name || "User"}
+                  </span>
                 </p>
-                <p className="text-xs text-slate-600 truncate">
-                  {replyingTo.text}
+                <p className="text-xs text-slate-600 mt-0.5 line-clamp-2 italic">
+                  “{replyingTo.text}”
                 </p>
               </div>
               <Button
@@ -1341,12 +1345,16 @@ export function MessageArea({
                 variant="ghost"
                 size="icon"
                 onClick={() => setReplyingTo(null)}
-                className="text-slate-500 hover:text-slate-700"
+                className="text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-all duration-300"
               >
                 ✕
               </Button>
+
+              {/* Decorative Glow */}
+              <div className="absolute inset-0 -z-10 bg-gradient-to-r from-blue-100/30 to-transparent rounded-xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
             </div>
           )}
+
           {filePreview && (
             <div className="mb-2 flex items-center justify-between">
               {file.type.startsWith("image") && (
