@@ -3,16 +3,14 @@
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { createContext, useContext, useState, useEffect } from "react";
-import { useSocket } from "@/contexts/socketContext";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null); // logged-in user
+  const [user, setUser] = useState({}); // logged-in user
   const [token, setToken] = useState(null); // JWT
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-  const socket = useSocket(); // ✅ Listen for live status updates
 
   // ✅ Load token & fetch current user on mount
   useEffect(() => {
@@ -46,23 +44,6 @@ export const AuthProvider = ({ children }) => {
     initializeAuth();
   }, []);
 
-  // ✅ Live sync user status via socket
-  useEffect(() => {
-    if (!socket || !user) return;
-
-    const handleStatusUpdate = ({ userId, status }) => {
-      if (userId === user._id) {
-        setUser((prev) => (prev ? { ...prev, status } : prev));
-      }
-    };
-
-    socket.on("userStatusUpdate", handleStatusUpdate);
-
-    return () => {
-      socket.off("userStatusUpdate", handleStatusUpdate);
-    };
-  }, [socket, user]);
-
   // ✅ Keep localStorage synced
   useEffect(() => {
     if (token) localStorage.setItem("token", token);
@@ -71,6 +52,8 @@ export const AuthProvider = ({ children }) => {
     if (user) localStorage.setItem("user", JSON.stringify(user));
     else localStorage.removeItem("user");
   }, [token, user]);
+
+  console.log("current user fetched: ", user);
 
   // ✅ Logout
   const logout = () => {

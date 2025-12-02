@@ -5,7 +5,15 @@ const router = express.Router();
 
 // GET /api/users/me
 router.get("/me", auth, async (req, res) => {
-  res.json(req.user);
+  try {
+    const currentUser = await User.findById(req.user.id)
+      .select("-password")
+      .lean();
+    res.json(currentUser);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
 });
 
 // GET /api/users?search=alice&exclude=123

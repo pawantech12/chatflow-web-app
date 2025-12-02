@@ -22,7 +22,7 @@ export function ChatSidebar({
 }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [sidebarChats, setSidebarChats] = useState(conversations);
-  const { user, logout } = useAuth();
+  const { user, setUser, logout } = useAuth();
 
   const socket = useSocket();
 
@@ -73,6 +73,11 @@ export function ChatSidebar({
 
     // User online/offline updates
     const handleUserStatusUpdate = ({ userId, status }) => {
+      // Update logged-in user's profile section real-time
+      setUser((prev) =>
+        prev && prev._id === userId ? { ...prev, status } : prev
+      );
+
       // Update sidebar chats
       setSidebarChats((prev) =>
         prev.map((chat) => {
@@ -139,9 +144,9 @@ export function ChatSidebar({
     socket.on("newChatCreated", handleNewChatCreated);
 
     socket.on("chatReadUpdate", handleChatReadUpdate);
-    socket.on("userStatusUpdate", handleUserStatusUpdate);
     socket.on("messageUpdated", handleMessageUpdated);
     socket.on("newGroupCreated", handleNewGroup);
+    socket.on("userStatusUpdate", handleUserStatusUpdate);
 
     return () => {
       socket.off("newChatMessage", handleNewChatMessage);
@@ -153,7 +158,9 @@ export function ChatSidebar({
       socket.off("chatDeleted", handleChatDeleted);
       socket.off("groupDeleted", handleGroupDeleted);
     };
-  }, [socket, user, sidebarChats]);
+  }, [socket]);
+
+  console.log("Updated User: ", user);
 
   // Filter conversations based on search query
   const filteredConversations = sidebarChats.filter((conv) => {
@@ -384,19 +391,19 @@ export function ChatSidebar({
             {/* User Info */}
             <div className="flex-1 min-w-0">
               <p className="font-semibold text-slate-900 text-sm truncate">
-                {user.name || user.username}
+                {user?.name || user?.username}
               </p>
               <div className="flex items-center gap-1">
                 <span
                   className={`text-xs font-medium ${
-                    user.status === "online"
+                    user?.status === "online"
                       ? "text-green-600"
-                      : user.status === "away"
+                      : user?.status === "away"
                       ? "text-yellow-600"
                       : "text-slate-500"
                   }`}
                 >
-                  {user.status || "offline"}
+                  {user?.status || "offline"}
                 </span>
               </div>
             </div>

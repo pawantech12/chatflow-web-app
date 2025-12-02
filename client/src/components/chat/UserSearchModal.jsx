@@ -39,7 +39,7 @@ export function UserSearchModal({ open, onOpenChange, onSelectUser }) {
         {
           params: {
             search: searchQuery,
-            exclude: user.id, // exclude current user
+            exclude: user._id, // exclude current user
           },
           headers: {
             Authorization: `Bearer ${token}`,

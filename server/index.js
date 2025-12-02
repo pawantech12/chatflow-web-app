@@ -72,7 +72,7 @@ io.on("connection", (socket) => {
   console.log("Socket connected", socket.user.email, socket.id);
 
   // Mark user online
-  User.findByIdAndUpdate(socket.user._id, { status: "online" })
+  User.findByIdAndUpdate(socket.user._id, { status: "online" }, { new: true })
     .then(() => {
       // Broadcast to all that user is online
       io.emit("userStatusUpdate", {

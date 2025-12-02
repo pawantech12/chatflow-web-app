@@ -299,7 +299,7 @@ export function MessageArea({
     if (!socket || !conversationId || isGroup) return;
 
     const handleTypingEvent = ({ userId, typing }) => {
-      if (userId === user.id) return; // ignore self
+      if (userId === user._id) return; // ignore self
       setTypingUsers((prev) =>
         typing
           ? [...new Set([...prev, userId])]
@@ -312,7 +312,7 @@ export function MessageArea({
     return () => {
       socket.off("typing", handleTypingEvent);
     };
-  }, [socket, conversationId, isGroup, user.id]);
+  }, [socket, conversationId, isGroup, user._id]);
 
   const handleSendMessage = async (e) => {
     e.preventDefault();

@@ -7,11 +7,11 @@ import { useAuth } from "@/contexts/AuthContext";
 const SocketContext = createContext(null);
 
 export const SocketProvider = ({ children }) => {
-  const { token, user } = useAuth();
+  const { token } = useAuth();
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
-    if (!token || !user) return;
+    if (!token) return;
 
     const newSocket = io(process.env.NEXT_PUBLIC_API_URL, {
       auth: { token },
@@ -22,7 +22,7 @@ export const SocketProvider = ({ children }) => {
     return () => {
       newSocket.disconnect();
     };
-  }, [token, user]);
+  }, [token]);
 
   return (
     <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>

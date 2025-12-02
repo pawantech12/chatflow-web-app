@@ -149,7 +149,7 @@ export default function ChatPage() {
                 selectedConversation.isGroup
                   ? selectedConversation.name || "Group Chat"
                   : selectedConversation.participants.find(
-                      (p) => p._id !== user.id
+                      (p) => p._id !== user._id
                     )?.name || "Unknown User"
               }
               conversationProfile={selectedConversation.groupProfilePic}
