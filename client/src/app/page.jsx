@@ -28,12 +28,6 @@ export default function LandingPage() {
   const { user, loading } = useAuth();
   const router = useRouter();
 
-  useEffect(() => {
-    if (user) {
-      router.push("/chat");
-    }
-  }, [user, loading, router]);
-
   const testimonials = [
     {
       name: "Sarah Johnson",
@@ -102,19 +96,30 @@ export default function LandingPage() {
 
             {/* Auth Buttons */}
             <div className="flex items-center gap-3">
-              <Link href="/login">
-                <Button
-                  variant="outline"
-                  className="border-slate-300 hover:border-blue-500 hover:bg-blue-50 transition-all duration-300"
-                >
-                  Sign In
-                </Button>
+              <Link href={`${user ? "/chat" : "/login"}`}>
+                {user ? (
+                  <Button
+                    variant="outline"
+                    className="border-slate-300 hover:border-blue-500 hover:bg-blue-50 transition-all duration-300"
+                  >
+                    Chat
+                  </Button>
+                ) : (
+                  <Button
+                    variant="outline"
+                    className="border-slate-300 hover:border-blue-500 hover:bg-blue-50 transition-all duration-300"
+                  >
+                    Sign In
+                  </Button>
+                )}
               </Link>
-              <Link href="/signup">
-                <Button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-md hover:shadow-lg transition-all duration-300">
-                  Get Started
-                </Button>
-              </Link>
+              {!user && (
+                <Link href="/signup">
+                  <Button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-md hover:shadow-lg transition-all duration-300">
+                    Get Started
+                  </Button>
+                </Link>
+              )}
             </div>
           </div>
         </div>
