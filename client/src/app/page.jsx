@@ -29,7 +29,7 @@ export default function LandingPage() {
   const router = useRouter();
 
   useEffect(() => {
-    if (!loading && user) {
+    if (user) {
       router.push("/chat");
     }
   }, [user, loading, router]);
